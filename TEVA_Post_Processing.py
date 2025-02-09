@@ -1,12 +1,9 @@
 # Import libraries
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-from matplotlib import colors
 import matplotlib.tri as tri
 
 # Define post-processing functions
-# Functions
 def flatten(xss):
     '''
     Flattens a list of lists.
@@ -70,4 +67,4 @@ def fitness_contours(n_grid, dnfs, ccs):
     interpolator = tri.LinearTriInterpolator(triangles, fitness)
     z = interpolator(xplot, yplot)
 
-    return (x, y, z)
+    return (x, y, z, fitness)
