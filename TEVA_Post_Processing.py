@@ -12,6 +12,7 @@ def flatten(xss):
     return np.array([x for xs in xss for x in xs])
 
 
+
 def parse_dnf(dnfs):
     '''
     Creates a list of the ccs composing each dnf.
@@ -26,6 +27,7 @@ def parse_dnf(dnfs):
     return all_ccs
 
 
+
 def parse_cc(ccs):
     '''
     Creates a list of the features composing each cc.
@@ -38,6 +40,7 @@ def parse_cc(ccs):
         cc_values = dict(cc_values[cc_values != 0])
         cc_features.append(list(cc_values.keys()))
     return cc_features
+
 
 
 def fitness_contours(n_grid, dnfs, ccs):
@@ -68,3 +71,44 @@ def fitness_contours(n_grid, dnfs, ccs):
     z = interpolator(xplot, yplot)
 
     return (x, y, z, fitness)
+
+
+
+def CC_feature_heatmap(unique_features, cc_features):
+    '''
+    This function goes through the CC features and builds a "correlation" - style matrix
+    that shows how many times each feature appears in a CC with each other feature.
+        
+            unique_features     list of unique features
+            cc_features         list of lists (ccs and their features)
+
+        Returns:
+            2d matrix
+    '''
+
+    matrix = np.zeros((len(unique_features), len(unique_features)))
+
+    # select the first feature
+    for i in range(0, len(unique_features)):
+        # select the second feature
+        for j in range(0, len(unique_features)):
+            # pass if same feature is selected
+            if unique_features[i] == unique_features[j]:
+                pass
+            else:
+                # loop through cc_features
+                for k in range(0, len(cc_features)):
+                    # pass for all order 1 CCs
+                    if len(cc_features[k]) == 1:
+                        pass
+                    else:
+                        # check if first feature is in the cc
+                        if unique_features[i] in cc_features[k]:
+                            # check if second feature is in the cc
+                            if unique_features[j] in cc_features[k]:
+                                matrix[i,j] += 1
+    
+    # set the upper triangle to be nan. k=0 sets the main diagonal to nan as well
+    matrix[np.triu_indices_from(matrix, k=0)] = np.nan
+    
+    return matrix
