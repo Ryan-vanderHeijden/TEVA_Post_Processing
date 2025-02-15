@@ -57,7 +57,6 @@ def fitness_contours(n_grid, dnfs, ccs):
         z           interpolated fitness masked array
 
     Can be passed into the Bokeh contour renderer. Example:
-                # fitness contours
                 # x, y, z = fitness_contours(1000, dnfs, ccs)
     '''
 
