@@ -111,3 +111,71 @@ def CC_feature_heatmap(unique_features, cc_features):
     matrix[np.triu_indices_from(matrix, k=0)] = np.nan
     
     return matrix
+
+
+
+def stacked_features(ccs, unique_features, cc_features, all_ccs_flat):
+    cc_len = np.arange(1, max(ccs['order']) + 1 , 1)
+    cc_col_names = ['Feature']
+
+    feature_counts = []
+    for i in range(len(unique_features)):
+        feature_counts.append(np.count_nonzero(all_ccs_flat==unique_features[i]))
+
+    for j in range(len(cc_len)):
+        cc_col_names.append('Order ' + str(j+1))
+
+    cc_col_names.append('Total')
+    feature_order = pd.DataFrame(columns=cc_col_names)
+    feature_order['Feature'] = unique_features
+    feature_order['Total'] = feature_counts
+
+    # List subset by length
+    for k in range(len(cc_len)):
+        # subset cc_features by order
+        subset = [sublist for sublist in cc_features if len(sublist) == cc_len[k]]
+        subset = np.array(flatten(subset))
+
+        for i in range(len(unique_features)):
+            feature_order.loc[i, 'Order ' + str(k+1)] = np.count_nonzero(subset==unique_features[i])
+
+    feature_order.sort_values(by=['Total'], ascending=False, inplace=True)
+    feature_order.drop(columns=['Total'], inplace=True)
+    stack_plot_feature = dict(feature_order)
+    stack_names_feature = cc_col_names[1:-1]
+
+    return stack_plot_feature, stack_names_feature
+
+
+
+def stacked_ccs(dnfs, unique_ccs, all_ccs, all_ccs_flat):
+    dnf_len = np.arange(1, max(dnfs['order']) + 1 , 1)
+    dnf_col_names = ['CC']
+
+    cc_counts = []
+    for i in range(len(unique_ccs)):
+        cc_counts.append(np.count_nonzero(all_ccs_flat==unique_ccs[i]))
+
+    for j in range(len(dnf_len)):
+        dnf_col_names.append('Order ' + str(j+1))
+
+    dnf_col_names.append('Total')
+    cc_order = pd.DataFrame(columns=dnf_col_names)
+    cc_order['CC'] = unique_ccs
+    cc_order['Total'] = cc_counts
+
+    # List subset by length
+    for k in range(len(dnf_len)):
+        # subset by order
+        subset = [sublist for sublist in all_ccs if len(sublist) == dnf_len[k]]
+        subset = np.array(flatten(subset))
+
+        for i in range(len(unique_ccs)):
+            cc_order.loc[i, 'Order ' + str(k+1)] = np.count_nonzero(subset==unique_ccs[i])
+
+    cc_order.sort_values(by=['Total'], ascending=False, inplace=True)
+    cc_order.drop(columns=['Total'], inplace=True)
+    stack_plot_cc = dict(cc_order)
+    stack_names_cc = dnf_col_names[1:-1]
+    
+    return stack_plot_cc, stack_names_cc
