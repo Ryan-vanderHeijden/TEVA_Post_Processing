@@ -20,7 +20,8 @@ def parse_dnf(dnfs):
 
     all_ccs = []
     for i in range(0, len(dnfs['mask'])):
-        item = dnfs.iloc[i].iloc[12:]
+        # don't include the first 14 columns
+        item = dnfs.iloc[i].iloc[14:]
         item_ccs = item[item==1].index.values.tolist()
         item_ccs = list(map(lambda j: j[3:], item_ccs))
         all_ccs.append(item_ccs)
@@ -35,7 +36,8 @@ def parse_cc(ccs):
 
     cc_features = []
     for i in range(0, len(ccs)):
-        cc_values = ccs.iloc[i].iloc[12:]
+        # don't include the first 14 columns
+        cc_values = ccs.iloc[i].iloc[14:]
         cc_values.fillna(value = 0, method=None, inplace=True)
         cc_values = dict(cc_values[cc_values != 0])
         cc_features.append(list(cc_values.keys()))
