@@ -142,7 +142,7 @@ def stacked_features(ccs, unique_features, cc_features, all_ccs_flat):
             feature_order.loc[i, 'Order ' + str(k+1)] = np.count_nonzero(subset==unique_features[i])
 
     feature_order.sort_values(by=['Total'], ascending=False, inplace=True)
-    feature_order.drop(columns=['Total'], inplace=True)
+    # feature_order.drop(columns=['Total'], inplace=True)
     stack_plot_feature = dict(feature_order)
     stack_names_feature = cc_col_names[1:-1]
 
