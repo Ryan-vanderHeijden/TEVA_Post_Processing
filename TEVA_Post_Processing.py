@@ -1,6 +1,7 @@
 # Import libraries
 import numpy as np
 import pandas as pd
+import ast
 import matplotlib.tri as tri
 
 # Define post-processing functions
@@ -181,3 +182,48 @@ def stacked_ccs(dnfs, unique_ccs, all_ccs, all_ccs_flat):
     stack_names_cc = dnf_col_names[1:-1]
     
     return stack_plot_cc, stack_names_cc
+
+
+def feature_ranges_by_cc(ccs):
+    '''
+    Parse the feature value ranges and write them to a list of lists.
+    '''
+
+    a = ccs.drop(columns=['Unnamed: 0', 'class', 'mask', 'fitness', 'order', 'age', 'cov', 'ppv',
+       'min_feat_sensitivity', 'max_feat_sensitivity', 'tp', 'tn', 'fp', 'fn'])
+    
+    main_list = []
+    for i in range(0, len(a)):
+        b = a.iloc[i].dropna().to_list()
+
+        value_list = []
+        for j in range(0, len(b)):
+                value_list.append(ast.literal_eval(b[j]))
+        
+        main_list.append(value_list)
+    
+    return main_list
+
+
+
+def feature_ranges_by_feature(ccs):
+    '''
+    Parse feature ranges by feature.
+    '''
+
+    a = ccs.drop(columns=['Unnamed: 0', 'class', 'mask', 'fitness', 'order', 'age', 'cov', 'ppv',
+        'min_feat_sensitivity', 'max_feat_sensitivity', 'tp', 'tn', 'fp', 'fn'])
+    a.dropna(axis=1, how='all', inplace=True)
+
+    cols = a.columns.to_list()
+
+    main_list = []
+    for i in range(0, len(cols)):
+        b = a[cols[i]].dropna().to_list()
+        value_list = []
+        for j in range(0, len(b)):
+            value_list.append(ast.literal_eval(b[j]))
+        
+        main_list.append(value_list)
+
+    return main_list
