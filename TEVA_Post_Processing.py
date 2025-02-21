@@ -116,13 +116,13 @@ def CC_feature_heatmap(unique_features, cc_features):
 
 
 
-def stacked_features(ccs, unique_features, cc_features, all_ccs_flat):
+def stacked_features(ccs, unique_features, cc_features, all_features_flat):
     cc_len = np.arange(1, max(ccs['order']) + 1 , 1)
     cc_col_names = ['Feature']
 
     feature_counts = []
     for i in range(len(unique_features)):
-        feature_counts.append(np.count_nonzero(all_ccs_flat==unique_features[i]))
+        feature_counts.append(np.count_nonzero(all_features_flat==unique_features[i]))
 
     for j in range(len(cc_len)):
         cc_col_names.append('Order ' + str(j+1))
@@ -176,7 +176,7 @@ def stacked_ccs(dnfs, unique_ccs, all_ccs, all_ccs_flat):
             cc_order.loc[i, 'Order ' + str(k+1)] = np.count_nonzero(subset==unique_ccs[i])
 
     cc_order.sort_values(by=['Total'], ascending=False, inplace=True)
-    cc_order.drop(columns=['Total'], inplace=True)
+    # cc_order.drop(columns=['Total'], inplace=True)
     stack_plot_cc = dict(cc_order)
     stack_names_cc = dnf_col_names[1:-1]
     
