@@ -227,3 +227,13 @@ def feature_ranges_by_feature(ccs):
         main_list.append(value_list)
 
     return main_list
+
+
+
+def confusion_matrix(ccs, cc_num):
+    '''
+    Given ccs output file and a selected cc, plot a confusion matrix.
+    Normalized by total count.
+    '''
+
+    return np.array([[ccs.iloc[cc_num]['tp'], ccs.iloc[cc_num]['fn']], [ccs.iloc[cc_num]['fp'], ccs.iloc[cc_num]['tn']]]) / sum(ccs.iloc[0]['tp' : 'fn'])
