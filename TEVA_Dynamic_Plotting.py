@@ -7,7 +7,7 @@ import panel as pn
 from bokeh.plotting import figure
 from bokeh.models import LinearColorMapper
 from bokeh.palettes import Viridis256
-from bokeh.models import HoverTool, ColumnDataSource, CDSView, GroupFilter, NumeralTickFormatter, LinearColorMapper, ColorBar, TabPanel, Tabs, IndexFilter
+from bokeh.models import HoverTool, CDSView, GroupFilter, NumeralTickFormatter, LinearColorMapper, ColorBar, IndexFilter
 from bokeh.transform import linear_cmap
 import TEVA_Post_Processing as post
 
@@ -114,18 +114,34 @@ def cc_plotter(min_sens, max_sens, fitness, x_fit, y_fit, z_fit, contour_colors,
     sens_filtered_CDS = IndexFilter(filter_idx)
     
     # Plot CCs, colored by order
-    for i in range(0, len(cc_len)):
-        order_filtered_CDS = GroupFilter(column_name='Order', group=len(cc_len) - i)
+    if len(np.floor(ccs['min_feat_sensitivity'][np.isinf(ccs['min_feat_sensitivity'])==False])) == 0:
 
-        p.scatter('x_values', 'y_values', source=cc_plot_source,
-                view=CDSView(filter=sens_filtered_CDS & order_filtered_CDS),
-                size=12,
-                marker='square',
-                line_color='white',
-                fill_color=linear_cmap('Order', cc_colors, low=min(ccs['order']), high=max(ccs['order'])),
-                hover_color='black',
-                legend_label='CC Order {}'.format(len(cc_len) - i),
-                fill_alpha=1)
+        for i in range(0, len(cc_len)):
+            order_filtered_CDS = GroupFilter(column_name='Order', group=len(cc_len) - i)
+
+            p.scatter('x_values', 'y_values', source=cc_plot_source,
+                    view=CDSView(filter=order_filtered_CDS),
+                    size=12,
+                    marker='square',
+                    line_color='white',
+                    fill_color=linear_cmap('Order', cc_colors, low=min(ccs['order']), high=max(ccs['order'])),
+                    hover_color='black',
+                    legend_label='CC Order {}'.format(len(cc_len) - i),
+                    fill_alpha=1)
+
+    else:
+        for i in range(0, len(cc_len)):
+            order_filtered_CDS = GroupFilter(column_name='Order', group=len(cc_len) - i)
+
+            p.scatter('x_values', 'y_values', source=cc_plot_source,
+                    view=CDSView(filter=sens_filtered_CDS & order_filtered_CDS),
+                    size=12,
+                    marker='square',
+                    line_color='white',
+                    fill_color=linear_cmap('Order', cc_colors, low=min(ccs['order']), high=max(ccs['order'])),
+                    hover_color='black',
+                    legend_label='CC Order {}'.format(len(cc_len) - i),
+                    fill_alpha=1)
     
     # Add hover tool for CCs
     p.add_tools(HoverTool(tooltips=cc_TOOLS,
