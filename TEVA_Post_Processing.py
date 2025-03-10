@@ -236,4 +236,4 @@ def confusion_matrix(ccs, cc_num):
     Normalized by total count.
     '''
 
-    return np.array([[ccs.iloc[cc_num]['tp'], ccs.iloc[cc_num]['fn']], [ccs.iloc[cc_num]['fp'], ccs.iloc[cc_num]['tn']]]) / sum(ccs.iloc[0]['tp' : 'fn'])
+    return np.array([[ccs.iloc[cc_num]['tp'], ccs.iloc[cc_num]['fn']], [ccs.iloc[cc_num]['fp'], ccs.iloc[cc_num]['tn']]]) #/ sum(ccs.iloc[0]['tp' : 'fn'])
