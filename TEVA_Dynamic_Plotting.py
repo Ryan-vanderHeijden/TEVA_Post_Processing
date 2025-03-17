@@ -17,19 +17,52 @@ def feature_plotter(selected_cc, data, cc_features, feature_values_by_cc):
     '''
     Generates flexible region that contains KDE plots of the features associated with a selected CC.
     Also plots the feature ranges associaated with the selected CC.
+
+    KDE plot for continuous data.
+    Bar plot for categorical data (work in progress)
     '''
 
     fig = []
     for i in range(len(cc_features[selected_cc])):
-        # KDE plot
-        kde_plot = data[cc_features[selected_cc][i]].dropna().hvplot.kde(height=200, width=300, hover=False).opts(color='lightgray')
+        # check if continuous or categorical
+        '''
+        This is not very robust: it just checks if the column dtpye is float or not, and
+        assumes that float is continuous and anything else is categorical.
+        '''
+        if data[cc_features[selected_cc][i]].dtype == 'float64':
+            # KDE plot
+            kde_plot = data[cc_features[selected_cc][i]].dropna().hvplot.kde(height=200, width=300, hover=False).opts(color='lightgray')
 
-        # VSpan glyph to show feature range        
-        feat_range_plot = hv.VSpan(feature_values_by_cc[selected_cc][i][0], feature_values_by_cc[selected_cc][i][1]).opts(color='red', alpha=0.3)
+            # VSpan glyph to show feature range        
+            feat_range_plot = hv.VSpan(feature_values_by_cc[selected_cc][i][0], feature_values_by_cc[selected_cc][i][1]).opts(color='red', alpha=0.3)
+            
+            # Combine plots and add to fig list, set options
+            fig.append(kde_plot * feat_range_plot)
+            fig[i].opts(shared_axes=False, toolbar=None)
         
-        # Combine plots and add to fig list, set options
-        fig.append(kde_plot * feat_range_plot)
-        fig[i].opts(shared_axes=False, toolbar=None)
+        else:
+            # bar plot
+            # prepare data for bar
+            a = data[cc_features[selected_cc][i]].value_counts()
+            a.sort_index(inplace=True)
+            a = pd.DataFrame(a)
+
+            # bar color by feature range
+            b = feature_values_by_cc[selected_cc][i]
+            c = a.index.tolist()
+            bar_colors = []
+            for j in range(len(a)):
+                if c[j] in b:
+                    bar_colors.append('lightcoral')
+                else:
+                    bar_colors.append('lightgray')
+            a['bar_color'] = bar_colors
+
+            bar_plot = a.hvplot.bar(x=cc_features[selected_cc][i], y='count', height=200, width=300, hover=False, color='bar_color').opts(alpha=0.7)
+
+            # Combine plots and add to fig list, set options
+            fig.append(bar_plot)# * feat_range_plot)
+            fig[i].opts(shared_axes=False, toolbar=None)
 
     return pn.FlexBox(objects=fig)
 
