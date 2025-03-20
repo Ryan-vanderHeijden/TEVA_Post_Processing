@@ -147,6 +147,7 @@ def stacked_features(ccs, unique_features, cc_features, all_features_flat):
     stack_plot_feature = dict(feature_order)
     stack_names_feature = cc_col_names[1:-1]
 
+
     return stack_plot_feature, stack_names_feature
 
 
@@ -188,9 +189,10 @@ def feature_ranges_by_cc(ccs):
     '''
     Parse the feature value ranges and write them to a list of lists.
     '''
-
-    a = ccs.drop(columns=['Unnamed: 0', 'class', 'mask', 'fitness', 'order', 'age', 'cov', 'ppv',
-       'min_feat_sensitivity', 'max_feat_sensitivity', 'tp', 'tn', 'fp', 'fn'])
+    cols_to_keep = ccs.columns.to_list()[14:]
+    a = ccs[cols_to_keep]
+    # a = ccs.drop(columns=['Unnamed: 0', 'class', 'mask', 'fitness', 'order', 'age', 'cov', 'ppv',
+    #    'min_feat_sensitivity', 'max_feat_sensitivity', 'tp', 'tn', 'fp', 'fn'])
     
     main_list = []
     for i in range(0, len(a)):
@@ -210,9 +212,10 @@ def feature_ranges_by_feature(ccs):
     '''
     Parse feature ranges by feature.
     '''
-
-    a = ccs.drop(columns=['Unnamed: 0', 'class', 'mask', 'fitness', 'order', 'age', 'cov', 'ppv',
-        'min_feat_sensitivity', 'max_feat_sensitivity', 'tp', 'tn', 'fp', 'fn'])
+    cols_to_keep = ccs.columns.to_list()[14:]
+    a = ccs[cols_to_keep]
+    # a = ccs.drop(columns=['Unnamed: 0', 'class', 'mask', 'fitness', 'order', 'age', 'cov', 'ppv',
+    #     'min_feat_sensitivity', 'max_feat_sensitivity', 'tp', 'tn', 'fp', 'fn'])
     a.dropna(axis=1, how='all', inplace=True)
 
     cols = a.columns.to_list()

@@ -1,3 +1,7 @@
+import os
+# PROJECT_DIR = os.getcwd()
+# os.chdir(PROJECT_DIR)
+# print(PROJECT_DIR)
 
 # Import libraries
 import numpy as np
@@ -9,7 +13,7 @@ from bokeh.models import LinearColorMapper
 from bokeh.palettes import Viridis256
 from bokeh.models import HoverTool, CDSView, GroupFilter, NumeralTickFormatter, LinearColorMapper, ColorBar, IndexFilter, Label, LabelSet, ColumnDataSource
 from bokeh.transform import linear_cmap
-import TEVA_Post_Processing as post
+from src.utils import TEVA_Post_Processing as post
 
 
 # Dynamic / Interactive Plots
@@ -177,8 +181,8 @@ def cc_plotter(min_sens, max_sens, fitness, x_fit, y_fit, z_fit, contour_colors,
     #### DNFs        
     # filter by sensitivity
     filter_dnf_idx = []
-    for i in range(len(dnf_plot_data['CCs'])):
-        if set(list(map(int, dnf_plot_data['CCs'][i]))).issubset(filter_idx) == True:
+    for i in range(len(dnf_plot_data['ccs'])):
+        if set(list(map(int, dnf_plot_data['ccs'][i]))).issubset(filter_idx) == True:
             filter_dnf_idx.append(i)
         else:
             pass
