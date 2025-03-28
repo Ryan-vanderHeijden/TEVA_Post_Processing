@@ -20,7 +20,7 @@ from src.utils import TEVA_Post_Processing as post
 def feature_plotter(selected_cc, data, cc_features, feature_values_by_cc):
     '''
     Generates flexible region that contains KDE plots of the features associated with a selected CC.
-    Also plots the feature ranges associaated with the selected CC.
+    Also plots the feature ranges associated with the selected CC.
 
     KDE plot for continuous data.
     Bar plot for categorical data (work in progress)
@@ -211,7 +211,7 @@ def cc_plotter(min_sens, max_sens, fitness, x_fit, y_fit, z_fit, contour_colors,
                           mode='mouse',
                           point_policy='follow_mouse'))
 
-    # Add seperate hover tool for DNFs
+    # Add separate hover tool for DNFs
     p.add_tools(HoverTool(renderers = all_dnf_plots,
                           tooltips=dnf_TOOLS,
                           mode='mouse',
