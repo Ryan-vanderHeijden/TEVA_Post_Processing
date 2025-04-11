@@ -12,6 +12,8 @@ from bokeh.transform import linear_cmap
 import TEVA_Post_Processing as post
 
 
+
+
 # Dynamic / Interactive Plots
 def feature_plotter(selected_cc, data, cc_features, feature_values_by_cc):
     '''
@@ -68,6 +70,8 @@ def feature_plotter(selected_cc, data, cc_features, feature_values_by_cc):
 
 
 
+
+
 def confusion_matrix_plotter(selected_cc, ccs):
     '''
     Plots a confusion matrix based on the selected CC.
@@ -107,6 +111,8 @@ def confusion_matrix_plotter(selected_cc, ccs):
     conf_mat_fig.add_layout(labels)
 
     return conf_mat_fig
+
+
 
 
 
@@ -230,3 +236,123 @@ def cc_plotter(min_sens, max_sens, fitness, x_fit, y_fit, z_fit, contour_colors,
     return p
 
 
+
+
+
+def cc_heatmap_plotter(cc_heatmap_colormap, unique_features, cc_features, cc_plot_data, min_sens, max_sens):
+    
+    cc_image_hover = [
+        ('Count', '@image')
+    ]
+
+    filter_idx = cc_plot_data[(cc_plot_data['min_sens'] >= min_sens.value) & (cc_plot_data['max_sens'] <= max_sens.value)].index.to_list()
+    sens_filtered_ccs = [cc_features[i] for i in filter_idx]
+    unique_features_filtered = pd.unique(post.flatten(sens_filtered_ccs))
+
+    cc_heatmap = figure(height=len(unique_features)*20,
+                        width=len(unique_features)*20,
+                        aspect_ratio=1,
+                        x_range=unique_features,
+                        y_range=unique_features,
+                        match_aspect=True,
+                        tools=['hover', 'crosshair', 'save'],
+                        tooltips=cc_image_hover)
+
+    cc_matrix = post.CC_feature_heatmap(unique_features_filtered, sens_filtered_ccs)
+
+    # CC feature image
+    cc_image_data = {
+        'image': [cc_matrix],
+        'x': [0],
+        'y': [0],
+        'dw': [len(unique_features_filtered)],
+        'dh': [len(unique_features_filtered)]
+    }
+
+    cc_image_data = ColumnDataSource(data=cc_image_data)
+
+    # Figure setup
+    cc_heatmap = figure(height=len(unique_features_filtered)*25,
+                        aspect_ratio=1,
+                        x_range=unique_features_filtered,
+                        y_range=unique_features_filtered,    
+                        match_aspect=True,
+                        tools=['hover', 'crosshair', 'save'],
+                        tooltips=cc_image_hover)
+
+    # Color map for data
+    img_color_mapper = LinearColorMapper(palette=cc_heatmap_colormap, low=0, high=len(unique_features_filtered))
+    # Imshow
+    img = cc_heatmap.image(source=cc_image_data, x='x', y='y', dw='dw', dh='dh', color_mapper=img_color_mapper)
+    # Create colorbar
+    color_bar = ColorBar(color_mapper=img_color_mapper, label_standoff=12, major_tick_line_color='black')
+    # Add colorbar to figure
+    cc_heatmap.add_layout(color_bar, 'right')
+
+    # color for nan values
+    img.glyph.color_mapper.nan_color = (0, 0, 0, 0)
+
+    # rotate x labels
+    cc_heatmap.xaxis.major_label_orientation = np.pi/2
+
+    # turn off grid
+    cc_heatmap.xgrid.visible = False
+    cc_heatmap.ygrid.visible = False
+
+    return cc_heatmap
+
+
+
+
+
+def cc_feature_usage_plot(unique_features, stacked_features, stacked_feature_names, cat_map, cc_len, min_sens, max_sens):
+
+    p2 = figure(width=max(len(unique_features)*20, 800), height=500,
+            x_range=stacked_features['Feature'],
+            x_axis_label='Feature',
+            y_axis_label='Count',
+            hidpi=True,
+            tools='crosshair, reset, save, help')
+
+    p2.vbar_stack(stacked_feature_names,
+                x='Feature',
+                width=0.6,
+                color=cat_map[0:len(cc_len)],
+                source=stacked_features,
+                legend_label=stacked_feature_names)
+
+    # General formatting
+    p2.xaxis.major_label_orientation = 1
+    p2.y_range.start = 0
+    p2.legend.location = 'top_right'
+    p2.legend.orientation = 'vertical'
+
+    return p2
+
+
+
+
+
+def dnf_usage_plot(unique_ccs, stacked_ccs, stacked_cc_names, cat_map, dnf_len, min_sens, max_sens):
+
+    p3 = figure(width=len(unique_ccs)*13, height=500,
+                x_range=stacked_ccs['CC'],
+                x_axis_label='CC',
+                y_axis_label='Count',
+                hidpi=True,
+                tools='crosshair, reset, save, help')
+
+    p3.vbar_stack(stacked_cc_names,
+                x='CC',
+                width=0.6,
+                color=cat_map[0:len(dnf_len)],
+                source=stacked_ccs,
+                legend_label=stacked_cc_names)
+
+    # General formatting
+    p3.xaxis.major_label_orientation = 1
+    p3.y_range.start = 0
+    p3.legend.location = 'top_right'
+    p3.legend.orientation = 'vertical'
+
+    return p3
