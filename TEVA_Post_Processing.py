@@ -87,7 +87,7 @@ def CC_feature_heatmap(unique_features, cc_features):
         Returns:
             2d matrix
     '''
-
+    
     matrix = np.zeros((len(unique_features), len(unique_features)))
 
     # select the first feature
