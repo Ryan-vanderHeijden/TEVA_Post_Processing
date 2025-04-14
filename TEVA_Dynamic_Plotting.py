@@ -305,9 +305,16 @@ def cc_heatmap_plotter(cc_heatmap_colormap, unique_features, cc_features, cc_plo
 
 
 
-def cc_feature_usage_plot(unique_features, stacked_features, stacked_feature_names, cat_map, cc_len, min_sens, max_sens):
+def cc_feature_usage_plot(ccs, cc_plot_data, cc_features, all_features_flat, cat_map, cc_len, min_sens, max_sens):
+    
+    # sensitivity filter
+    filter_idx = cc_plot_data[(cc_plot_data['min_sens'] >= min_sens.value) & (cc_plot_data['max_sens'] <= max_sens.value)].index.to_list()
+    sens_filtered_ccs = [cc_features[i] for i in filter_idx]
+    unique_features_filtered = pd.unique(post.flatten(sens_filtered_ccs))
 
-    p2 = figure(width=max(len(unique_features)*20, 800), height=500,
+    stacked_features, stacked_feature_names = post.stacked_features(ccs, unique_features_filtered, cc_features, all_features_flat)
+
+    p2 = figure(width=max(len(unique_features_filtered)*20, 800), height=500,
             x_range=stacked_features['Feature'],
             x_axis_label='Feature',
             y_axis_label='Count',
@@ -333,9 +340,24 @@ def cc_feature_usage_plot(unique_features, stacked_features, stacked_feature_nam
 
 
 
-def dnf_usage_plot(unique_ccs, stacked_ccs, stacked_cc_names, cat_map, dnf_len, min_sens, max_sens):
+def dnf_usage_plot(dnfs, dnf_plot_data, cc_plot_data, all_ccs, all_ccs_flat, cat_map, dnf_len, min_sens, max_sens):
+    # sensitivity filter
+    # the ccs
+    filter_idx = cc_plot_data[(cc_plot_data['min_sens'] >= min_sens.value) & (cc_plot_data['max_sens'] <= max_sens.value)].index.to_list()
 
-    p3 = figure(width=len(unique_ccs)*13, height=500,
+    # used to filter the dnfs
+    filter_dnf_idx = []
+    for i in range(len(dnf_plot_data['CCs'])):
+        if set(list(map(int, dnf_plot_data['CCs'][i]))).issubset(filter_idx) == True:
+            filter_dnf_idx.append(i)
+        else:
+            pass
+    sens_filtered_dnfs = [all_ccs[i] for i in filter_dnf_idx]
+    unique_ccs_filtered = pd.unique(post.flatten(sens_filtered_dnfs))
+
+    stacked_ccs, stacked_cc_names = post.stacked_ccs(dnfs, unique_ccs_filtered, all_ccs, all_ccs_flat)
+
+    p3 = figure(width=max(len(unique_ccs_filtered)*13, 800), height=500,
                 x_range=stacked_ccs['CC'],
                 x_axis_label='CC',
                 y_axis_label='Count',
