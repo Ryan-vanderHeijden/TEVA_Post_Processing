@@ -1,9 +1,11 @@
-**Welcome to the TEVA Output Explorer!**
-
+# **Welcome to the TEVA Output Explorer!**
 *Python dashboard for viewing and interacting with the outputs of the TEVA algorithm.*
 
-The three main components are:
-`main.ipynb` is the main dashboard and manages importing the TEVA output files, running some post-processing functions, setting up plot interactivity, and constructing the dashboard. It it dependent on two supporting files `TEVA_Post_Processing.py` and `TEVA_Dynamic_Plotting.py`.
+*Notebook and supporting .py  scripts by Ryan van der Heijden | rvanderh@uvm.edu*
+#
+
+### Components
+`TEVA_Output_Explorer.ipynb` is the main notebook and manages importing the TEVA output files, running some post-processing functions, setting up plot interactivity, and constructing the dashboard. It depends on two supporting files `TEVA_Post_Processing.py` and `TEVA_Dynamic_Plotting.py`.
 
 `TEVA_Post_Processing.py` contains the post-processing functions that transform the .xlsx file output from TEVA into several more informative and user-friendly data structures. These data structures are used to generate the interactive plots.
 
@@ -11,7 +13,9 @@ The three main components are:
 
 Examples of TEVA output files and observation data are included in the `Sample_Data` folder.
 
-**The `main.ipynb` notebook is divided into six sections:**
+### About the notebook
+
+**The `TEVA_Output_Explorer.ipynb` notebook is divided into six sections:**
 1. Import dependencies
 2. Import TEVA output files and observation data
 3. Run post-processing functions
