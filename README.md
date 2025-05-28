@@ -55,6 +55,6 @@ Examples of TEVA output files and observation data are included in the `Sample_D
 4. Now you're ready to go!
 
 ##
-Once you are finished, make sure to turn off your staging server: ([Instructions for shutting off server](https://www.youtube.com/watch?v=VSFs2bu4-74&feature=youtu.be))
+Once you are finished, make sure to shut down your server: ([Instructions for shutting off server](https://www.youtube.com/watch?v=VSFs2bu4-74&feature=youtu.be))
 
 
