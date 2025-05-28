@@ -41,7 +41,7 @@ Examples of TEVA output files and observation data are included in the `Sample_D
 
 <br/><br/>
 # CIROH 2i2c Setup
-1. Navigate to the [CIROH 2i2c Hub](`https://workshop.ciroh.awi.2i2c.cloud/hub/spawn`) and log in. From the dropdown for the "Small" server option, select `TEVA for Feature Selection`. Start your server.
+1. Navigate to the ([CIROH 2i2c Hub](`https://workshop.ciroh.awi.2i2c.cloud/hub/spawn`)) and log in. From the dropdown for the "Small" server option, select `TEVA for Feature Selection`. Start your server.
 
 <img src='Sample_Data/Jupyter_Hub_Server_Select.png' width='500'>
 
