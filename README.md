@@ -46,7 +46,7 @@ Examples of TEVA output files and observation data are included in the `Sample_D
 <img src='Sample_Data/Jupyter_Hub_Server_Select.png' width='500'>
 
 
-2. From the menu bar, create a new folder and title it something relevant, such as `TEVA DevCon` or something similar.
+2. From the menu bar, create a new folder 📁 and title it something relevant, such as `TEVA DevCon` or something similar.
 
 3. Select the folder, and open a new terminal. Clone the workshop repository:
 
